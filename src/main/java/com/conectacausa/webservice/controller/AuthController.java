@@ -6,10 +6,7 @@ import com.conectacausa.webservice.security.JwtUtil;
 import com.conectacausa.webservice.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Optional;
@@ -40,12 +37,31 @@ public class AuthController {
      * @return usuário criado em caso de sucesso
      */
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Map<String, String> request) {
-        AppUser appuser = userService.registerUser(request.get("email"), request.get("password"),
-                request.get("name"), request.get("availability_start_time"), request.get("availability_end_time"),
-                request.get("address_number"), request.get("address_detail"), request.get("zip_code"));
+    public ResponseEntity<?> register(
+            @RequestParam String email,
+            @RequestParam String password,
+            @RequestParam String name,
+            @RequestParam("availability_start_time") String availabilityStartTime,
+            @RequestParam("availability_end_time") String availabilityEndTime,
+            @RequestParam("address_number") String addressNumber,
+            @RequestParam("address_detail") String addressDetail,
+            @RequestParam("zip_code") String zipCode
+    ) {
+
+        AppUser appuser = userService.registerUser(
+                email,
+                password,
+                name,
+                availabilityStartTime,
+                availabilityEndTime,
+                addressNumber,
+                addressDetail,
+                zipCode
+        );
+
         return ResponseEntity.ok(appuser);
     }
+
 
     /**
      * Realiza a autenticação de um usuário.
