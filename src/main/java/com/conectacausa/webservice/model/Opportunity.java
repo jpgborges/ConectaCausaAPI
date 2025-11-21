@@ -2,8 +2,6 @@ package com.conectacausa.webservice.model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "opportunity", schema = "conectacausa")
 public class Opportunity {
@@ -20,7 +18,7 @@ public class Opportunity {
     private String cep;
 
     @Column(name = "hour", nullable = false)
-    private LocalDate hour;
+    private String hour;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id")
@@ -57,11 +55,11 @@ public class Opportunity {
         this.cep = cep;
     }
 
-    public LocalDate getHour() {
+    public String getHour() {
         return hour;
     }
 
-    public void setHour(LocalDate hour) {
+    public void setHour(String hour) {
         this.hour = hour;
     }
 
