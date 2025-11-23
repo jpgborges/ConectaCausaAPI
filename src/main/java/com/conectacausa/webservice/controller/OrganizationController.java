@@ -38,14 +38,14 @@ public class OrganizationController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getOrganizationById(@RequestParam Long id) {
+    public ResponseEntity<?> getOrganizationById(@RequestParam Integer id) {
         OrganizationDTO dto = organizationService.getOrganizationById(id);
         return ResponseEntity.ok(dto);
     }
 
     @PutMapping
     public ResponseEntity<?> updateOrganization(
-            @RequestParam Long id,
+            @RequestParam Integer id,
             @RequestParam String name,
             @RequestParam String email,
             @RequestParam("address_number") String addressNumber,

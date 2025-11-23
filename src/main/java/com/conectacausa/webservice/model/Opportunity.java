@@ -14,12 +14,6 @@ public class Opportunity {
     @Column(name = "description", nullable = false, length = Integer.MAX_VALUE)
     private String description;
 
-    @Column(name = "cep", nullable = false, length = Integer.MAX_VALUE)
-    private String cep;
-
-    @Column(name = "hour", nullable = false)
-    private String hour;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id")
     private Organization organization;
@@ -30,6 +24,9 @@ public class Opportunity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cause_type_id")
     private CauseType causeType;
+
+    @Column(name = "hour", nullable = false, length = Integer.MAX_VALUE)
+    private String hour;
 
     public Integer getId() {
         return id;
@@ -45,22 +42,6 @@ public class Opportunity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getHour() {
-        return hour;
-    }
-
-    public void setHour(String hour) {
-        this.hour = hour;
     }
 
     public Organization getOrganization() {
@@ -85,6 +66,14 @@ public class Opportunity {
 
     public void setCauseType(CauseType causeType) {
         this.causeType = causeType;
+    }
+
+    public String getHour() {
+        return hour;
+    }
+
+    public void setHour(String hour) {
+        this.hour = hour;
     }
 
 }

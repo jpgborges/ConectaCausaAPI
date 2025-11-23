@@ -40,7 +40,7 @@ public class OrganizationService {
         return organizationRepository.save(organization);
     }
 
-    public OrganizationDTO getOrganizationById(Long id) {
+    public OrganizationDTO getOrganizationById(Integer id) {
 
         Organization organization = organizationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Organização não encontrada: " + id));
@@ -49,7 +49,7 @@ public class OrganizationService {
     }
 
     public Organization updateOrganization(
-            Long id,
+            Integer id,
             String name,
             String email,
             String addressNumber,

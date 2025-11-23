@@ -3,24 +3,26 @@ package com.conectacausa.webservice.service;
 import com.conectacausa.webservice.model.CauseType;
 import com.conectacausa.webservice.model.Opportunity;
 import com.conectacausa.webservice.model.Organization;
+import com.conectacausa.webservice.repository.CauseTypeRepository;
+import com.conectacausa.webservice.repository.OpportunityRepository;
 import com.conectacausa.webservice.repository.OrganizationRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OpportunityRepository {
+public class OpportunityService {
 
     private final OpportunityRepository opportunityRepository;
     private final OrganizationRepository organizationRepository;
-    private final CauseType causeType;
+    private final CauseTypeRepository causeTypeRepository;
 
-    public OpportunityRepository(OpportunityRepository opportunityRepository,  OrganizationRepository organizationRepository, CauseType causeType) {
+
+    public OpportunityService(OpportunityRepository opportunityRepository, OrganizationRepository organizationRepository, CauseTypeRepository causeTypeRepository) {
         this.opportunityRepository = opportunityRepository;
         this.organizationRepository = organizationRepository;
-        this.causeType = causeType;
+        this.causeTypeRepository = causeTypeRepository;
     }
 
     public Opportunity registerOpportunity(String description,
-                                           String cep,
                                            String hour,
                                            Integer duration,
                                            Integer organizationId,
@@ -29,7 +31,6 @@ public class OpportunityRepository {
         Opportunity opportunity = new Opportunity();
 
         opportunity.setDescription(description);
-        opportunity.setCep(cep);
         opportunity.setHour(hour);
         opportunity.setDuration(duration);
 

@@ -72,10 +72,11 @@ public class AuthController {
      * ou mensagem de erro com status 401 se inválidas
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
-        Optional<AppUser> user = userService.findByEmail(request.get("email"));
-        if (user.isPresent() && new BCryptPasswordEncoder().matches(request.get("password"), user.get().getPassword())) {
-            String token = JwtUtil.generateToken(user.get().getEmail().toString());
+    public ResponseEntity<?> login(@RequestParam String email,
+                                   @RequestParam String password) {
+        Optional<AppUser> user = userService.findByEmail(email);
+        if (user.isPresent() && new BCryptPasswordEncoder().matches(password, user.get().getPassword())) {
+            String token = JwtUtil.generateToken(user.get().getEmail());
             return ResponseEntity.ok(Map.of("token", token));
         }
         return ResponseEntity.status(401).body("Credenciais inválidas");
