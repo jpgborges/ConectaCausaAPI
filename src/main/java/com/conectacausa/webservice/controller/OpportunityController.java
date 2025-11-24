@@ -1,13 +1,14 @@
 package com.conectacausa.webservice.controller;
 
+import com.conectacausa.webservice.dto.OpportunityDTO;
+import com.conectacausa.webservice.dto.OrganizationDTO;
 import com.conectacausa.webservice.mapper.OpportunityMapper;
 import com.conectacausa.webservice.model.Opportunity;
 import com.conectacausa.webservice.service.OpportunityService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/opportunities")
@@ -38,4 +39,17 @@ public class OpportunityController {
 
         return ResponseEntity.ok(OpportunityMapper.toDTO(opportunity));
     }
+
+    @GetMapping
+    public ResponseEntity<?> getAllOpportunities() {
+
+        List<Opportunity> list = opportunityService.findAll();
+
+        List<OpportunityDTO> dtoList = list.stream()
+                .map(OpportunityMapper::toDTO)
+                .toList();
+
+        return ResponseEntity.ok(dtoList);
+    }
+
 }

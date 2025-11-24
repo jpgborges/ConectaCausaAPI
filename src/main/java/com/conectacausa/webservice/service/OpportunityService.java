@@ -8,6 +8,8 @@ import com.conectacausa.webservice.repository.OpportunityRepository;
 import com.conectacausa.webservice.repository.OrganizationRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OpportunityService {
 
@@ -45,6 +47,10 @@ public class OpportunityService {
         opportunity.setCauseType(causeType);
 
         return opportunityRepository.save(opportunity);
+    }
+
+    public List<Opportunity> findAll() {
+        return opportunityRepository.findAll();
     }
 
 }
