@@ -45,7 +45,8 @@ public class AuthController {
             @RequestParam("availability_end_time") String availabilityEndTime,
             @RequestParam("address_number") String addressNumber,
             @RequestParam("address_detail") String addressDetail,
-            @RequestParam("zip_code") String zipCode
+            @RequestParam("zip_code") String zipCode,
+            @RequestParam String abilities
     ) {
 
         AppUser appuser = userService.registerUser(
@@ -56,7 +57,8 @@ public class AuthController {
                 availabilityEndTime,
                 addressNumber,
                 addressDetail,
-                zipCode
+                zipCode,
+                abilities
         );
 
         return ResponseEntity.ok(appuser);

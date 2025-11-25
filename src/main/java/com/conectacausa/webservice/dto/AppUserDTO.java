@@ -1,5 +1,7 @@
 package com.conectacausa.webservice.dto;
 
+import java.util.List;
+
 public record AppUserDTO(
         Integer id,
         String email,
@@ -8,5 +10,6 @@ public record AppUserDTO(
         String availabilityEndTime,
         String addressNumber,
         String addressDetail,
-        ZipCodeDTO zipCode
+        ZipCodeDTO zipCode,
+        List<Integer> abilities
 ) {}
