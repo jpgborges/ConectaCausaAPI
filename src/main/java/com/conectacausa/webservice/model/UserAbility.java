@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "user_ability", schema = "conectacausa")
 public class UserAbility {
-    @SequenceGenerator(name = "user_ability_id_gen", sequenceName = "seq_user", allocationSize = 1)
     @EmbeddedId
     private UserAbilityId id;
 
