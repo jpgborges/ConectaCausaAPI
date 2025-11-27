@@ -5,6 +5,7 @@ import com.conectacausa.webservice.repository.AbilityRepository;
 import com.conectacausa.webservice.repository.UserAbilityRepository;
 import com.conectacausa.webservice.repository.UserRepository;
 import com.conectacausa.webservice.repository.ZipCodeRepository;
+import com.conectacausa.webservice.view.AppUserExtended;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -98,7 +99,10 @@ public class UserService {
             Ability ability = abilityRepository.findById(abilityId)
                     .orElseThrow(() -> new RuntimeException("Ability não encontrada: " + abilityId));
 
-            UserAbilityId compositeId = new UserAbilityId(savedUser.getId(), abilityId);
+            UserAbilityId compositeId = new UserAbilityId();
+            compositeId.setUserId(savedUser.getId());
+            compositeId.setAbilityId(abilityId);
+
 
             UserAbility relation = new UserAbility();
             relation.setId(compositeId);
@@ -122,6 +126,20 @@ public class UserService {
                 .map(Integer::parseInt)
                 .toList();
     }
+
+    public Optional<AppUserExtended> findUserWithAbilities(String email) {
+
+        AppUser user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        List<String> abilities = userAbilityRepository.findById(user.getId())
+                .stream()
+                .map(ua -> ua.getAbility().getDescription())
+                .toList();
+
+        return new AppUserExtended(user, abilities);
+    }
+
 
 
     /**

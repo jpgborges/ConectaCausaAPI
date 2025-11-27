@@ -11,7 +11,9 @@ import java.util.Optional;
  * Fornece operações CRUD básicas através do JpaRepository.
  */
 @Repository
-public interface UserRepository extends JpaRepository<AppUser, Long> {
+public interface UserRepository extends JpaRepository<AppUser, Integer> {
 
     Optional<AppUser> findByEmail(String email);
+
+    Optional<AppUser> findById(Integer id);
 }

@@ -4,13 +4,17 @@ import com.conectacausa.webservice.dto.AppUserDTO;
 import com.conectacausa.webservice.dto.ZipCodeDTO;
 import com.conectacausa.webservice.model.AppUser;
 import com.conectacausa.webservice.model.ZipCode;
+import com.conectacausa.webservice.view.AppUserExtended;
+
+import java.util.List;
 
 public class AppUserMapper {
 
-    public static AppUserDTO toDTO(AppUser user) {
+    public static AppUserDTO toDTO(AppUserExtended ext) {
+
+        AppUser user = ext.getUser();
 
         ZipCode zip = user.getZipCode();
-
         ZipCodeDTO zipDTO = new ZipCodeDTO(
                 zip.getZipCode(),
                 zip.getStreet(),
@@ -28,7 +32,9 @@ public class AppUserMapper {
                 user.getAvailabilityEndTime(),
                 user.getAddressNumber(),
                 user.getAddressDetail(),
-                zipDTO
+                zipDTO,
+                ext.getAbilities()
         );
     }
+
 }
