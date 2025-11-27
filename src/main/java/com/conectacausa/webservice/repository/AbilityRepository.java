@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface AbilityRepository extends JpaRepository<Ability, Integer> {
 
-    Optional<Ability> findbyid(Integer id);
+    Optional<Ability> findById(Integer id);
 }
