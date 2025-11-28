@@ -39,20 +39,67 @@ public class AuthController {
     })
     @PostMapping("/register")
     public ResponseEntity<?> register(
-            @Parameter(description = "E-mail do usuário", required = true) @RequestParam String email,
-            @Parameter(description = "Senha do usuário", required = true) @RequestParam String password,
-            @Parameter(description = "Nome completo", required = true) @RequestParam String name,
+            @Parameter(description = "E-mail do usuário", required = true)
+            @RequestParam String email,
+
+            @Parameter(description = "Senha do usuário", required = true)
+            @RequestParam String password,
+
+            @Parameter(description = "Nome completo", required = true)
+            @RequestParam String name,
+
             @Parameter(description = "Horário de início da disponibilidade (ex: 08:00)", required = true)
             @RequestParam("availability_start_time") String availabilityStartTime,
+
             @Parameter(description = "Horário de fim da disponibilidade (ex: 18:00)", required = true)
             @RequestParam("availability_end_time") String availabilityEndTime,
+
             @Parameter(description = "Número da residência", required = true)
             @RequestParam("address_number") String addressNumber,
+
             @Parameter(description = "Complemento do endereço (ex: apto 402)")
             @RequestParam("address_detail") String addressDetail,
-            @Parameter(description = "CEP do endereço", required = true)
+
+            @Parameter(
+                    description = """
+                        CEP do endereço (obrigatório). 
+                        Utilize apenas um dos CEPs já cadastrados no banco:
+
+                        • 44001002
+                        • 44002110
+                        • 44004224
+                        • 44006146
+                        • 44009014
+                        • 44010160
+                        • 44013214
+                        • 44015240
+                        • 44020224
+                        • 44032900
+                        """,
+                    required = true
+            )
             @RequestParam("zip_code") String zipCode,
-            @Parameter(description = "Habilidades do usuário em formato string separada por vírgula (ex: comunicação, liderança)")
+
+            @Parameter(
+                    description = """
+                Habilidades do usuário separadas por vírgula.
+                Informe os IDs conforme a lista abaixo:
+
+                1 - Organização e Planejamento de Eventos
+                2 - Comunicação e Relações Públicas
+                3 - Domínio de Redes Sociais e Marketing Digital
+                4 - Conhecimento em Design Gráfico (Ex: Canva, Photoshop)
+                5 - Habilidades de Ensino ou Treinamento
+                6 - Trabalho Manual (Ex: Construção, Jardinagem, Artesanato)
+                7 - Capacidade de Coleta e Análise de Dados
+                8 - Suporte Administrativo ou Escritório
+                9 - Primeiros Socorros ou Suporte de Saúde
+                10 - Condução de Veículos e Logística
+
+                Exemplo: "1,4,10"
+                """,
+                    required = true
+            )
             @RequestParam String abilities
     ) {
 
