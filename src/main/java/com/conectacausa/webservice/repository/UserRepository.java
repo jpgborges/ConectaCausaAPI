@@ -6,10 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-/**
- * Repositório responsável pelo acesso a dados da entidade Usuário.
- * Fornece operações CRUD básicas através do JpaRepository.
- */
 @Repository
 public interface UserRepository extends JpaRepository<AppUser, Integer> {
 

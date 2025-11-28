@@ -1,9 +1,14 @@
 package com.conectacausa.webservice.controller;
 
-
 import com.conectacausa.webservice.model.AppUser;
 import com.conectacausa.webservice.security.JwtUtil;
 import com.conectacausa.webservice.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -11,41 +16,43 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Controlador responsável pelas operações de autenticação.
- * Fornece endpoints para relacionados a autenticação.
- */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
     private final UserService userService;
 
-    /**
-     * Construtor para injeção do serviço de usuários.
-     *
-     * @param userService serviço de gerenciamento de usuários
-     */
     public AuthController(UserService userService) {
         this.userService = userService;
     }
 
-    /**
-     * Registra um novo usuário no sistema.
-     *
-     * @param request mapa contendo os campos "username" e "password"
-     * @return usuário criado em caso de sucesso
-     */
+    @Operation(
+            summary = "Registrar novo usuário",
+            description = "Cria um novo usuário voluntário na plataforma ConectaCausa"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Usuário criado com sucesso",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AppUser.class))),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
     @PostMapping("/register")
     public ResponseEntity<?> register(
-            @RequestParam String email,
-            @RequestParam String password,
-            @RequestParam String name,
+            @Parameter(description = "E-mail do usuário", required = true) @RequestParam String email,
+            @Parameter(description = "Senha do usuário", required = true) @RequestParam String password,
+            @Parameter(description = "Nome completo", required = true) @RequestParam String name,
+            @Parameter(description = "Horário de início da disponibilidade (ex: 08:00)", required = true)
             @RequestParam("availability_start_time") String availabilityStartTime,
+            @Parameter(description = "Horário de fim da disponibilidade (ex: 18:00)", required = true)
             @RequestParam("availability_end_time") String availabilityEndTime,
+            @Parameter(description = "Número da residência", required = true)
             @RequestParam("address_number") String addressNumber,
+            @Parameter(description = "Complemento do endereço (ex: apto 402)")
             @RequestParam("address_detail") String addressDetail,
+            @Parameter(description = "CEP do endereço", required = true)
             @RequestParam("zip_code") String zipCode,
+            @Parameter(description = "Habilidades do usuário em formato string separada por vírgula (ex: comunicação, liderança)")
             @RequestParam String abilities
     ) {
 
@@ -64,18 +71,22 @@ public class AuthController {
         return ResponseEntity.ok(appuser);
     }
 
-
-    /**
-     * Realiza a autenticação de um usuário.
-     * Verifica as credenciais e retorna um token JWT se forem válidas.
-     *
-     * @param request mapa contendo os campos "username" e "password"
-     * @return token JWT em caso de sucesso,
-     * ou mensagem de erro com status 401 se inválidas
-     */
+    @Operation(
+            summary = "Login do usuário",
+            description = "Realiza autenticação e retorna um token JWT válido"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Login realizado com sucesso",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(example = "{\"token\": \"jwt-token-aqui\"}"))),
+            @ApiResponse(responseCode = "401", description = "Credenciais inválidas"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String email,
-                                   @RequestParam String password) {
+    public ResponseEntity<?> login(
+            @Parameter(description = "E-mail do usuário", required = true) @RequestParam String email,
+            @Parameter(description = "Senha do usuário", required = true) @RequestParam String password
+    ) {
         Optional<AppUser> user = userService.findByEmail(email);
         if (user.isPresent() && new BCryptPasswordEncoder().matches(password, user.get().getPassword())) {
             String token = JwtUtil.generateToken(user.get().getEmail());
