@@ -21,6 +21,7 @@ import java.util.Optional;
 public class AuthController {
 
     private final UserService userService;
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public AuthController(UserService userService) {
         this.userService = userService;
@@ -95,8 +96,6 @@ public class AuthController {
                 8 - Suporte Administrativo ou Escritório
                 9 - Primeiros Socorros ou Suporte de Saúde
                 10 - Condução de Veículos e Logística
-
-                Exemplo: "1,4,10"
                 """,
                     required = true
             )
@@ -120,25 +119,40 @@ public class AuthController {
 
     @Operation(
             summary = "Login do usuário",
-            description = "Realiza autenticação e retorna um token JWT válido"
+            description = """
+                Realiza autenticação e retorna um token JWT no campo `token`.
+
+                Esse endpoint **não exige autenticação**.
+                O Swagger irá capturar automaticamente a resposta e armazenar o token
+                para uso nos demais endpoints protegidos.
+                """
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Login realizado com sucesso",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(example = "{\"token\": \"jwt-token-aqui\"}"))),
-            @ApiResponse(responseCode = "401", description = "Credenciais inválidas"),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(example = "{\"token\": \"jwt-token-aqui\"}")
+                    )),
+            @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
     })
     @PostMapping("/login")
     public ResponseEntity<?> login(
-            @Parameter(description = "E-mail do usuário", required = true) @RequestParam String email,
-            @Parameter(description = "Senha do usuário", required = true) @RequestParam String password
+            @Parameter(description = "E-mail do usuário", required = true)
+            @RequestParam String email,
+
+            @Parameter(description = "Senha do usuário", required = true)
+            @RequestParam String password
     ) {
+
         Optional<AppUser> user = userService.findByEmail(email);
-        if (user.isPresent() && new BCryptPasswordEncoder().matches(password, user.get().getPassword())) {
-            String token = JwtUtil.generateToken(user.get().getEmail());
-            return ResponseEntity.ok(Map.of("token", token));
+
+        if (user.isEmpty() || !encoder.matches(password, user.get().getPassword())) {
+            return ResponseEntity.status(401).body(Map.of("error", "Credenciais inválidas"));
         }
-        return ResponseEntity.status(401).body("Credenciais inválidas");
+
+        // 🔥 JWT retornado no formato esperado pelo script do Swagger:
+        String token = JwtUtil.generateToken(user.get().getEmail());
+
+        return ResponseEntity.ok(Map.of("token", token));
     }
 }
