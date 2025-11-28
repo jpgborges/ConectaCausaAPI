@@ -16,9 +16,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Serviço responsável pela lógica de negócio relacionada a usuários.
- */
 @Service
 public class UserService {
 
@@ -28,13 +25,6 @@ public class UserService {
     private final AbilityRepository  abilityRepository;
     private final UserAbilityRepository userAbilityRepository;
 
-
-    /**
-     * Construtor com injeção do repositório de usuários.
-     * Inicializa o encoder de senhas BCrypt.
-     *
-     * @param userRepository repositório para acesso a dados de usuários
-     */
     public UserService(UserRepository userRepository, ZipCodeRepository zipCodeRepository, AbilityRepository abilityRepository, UserAbilityRepository userAbilityRepository) {
         this.userRepository = userRepository;
         this.zipCodeRepository = zipCodeRepository;
@@ -43,30 +33,6 @@ public class UserService {
         this.userAbilityRepository = userAbilityRepository;
     }
 
-    /**
-     * Registra um novo usuário com senha criptografada.
-     *
-     * @param username nome de usuário
-     * @param password senha do usuário
-     * @return usuário registrado
-     */
-//    public AppUser registerUser(String email, String password, String name, String availability_start_time, String availability_end_time, String address_number, String address_detail, String zip_code, String abilities){
-//        String encodedPassword = passwordEncoder.encode(password);
-//        AppUser appuser = new AppUser();
-//        appuser.setEmail(email);
-//        appuser.setPassword(encodedPassword);
-//        appuser.setName(name);
-//        appuser.setAvailabilityStartTime(availability_start_time);
-//        appuser.setAvailabilityEndTime(availability_end_time);
-//        appuser.setAddressNumber(address_number);
-//        appuser.setAddressDetail(address_detail);
-//        ZipCode zipcodeObj = zipCodeRepository.findByZipCode(zip_code)
-//                .orElseThrow(() -> new RuntimeException("ZipCode não encontrado: " + zip_code));
-//
-//        appuser.setZipCode(zipcodeObj);
-//
-//        return userRepository.save(appuser);
-//    }
     public AppUser registerUser(String email, String password, String name,
                                 String availability_start_time, String availability_end_time,
                                 String address_number, String address_detail,
@@ -87,13 +53,10 @@ public class UserService {
 
         appuser.setZipCode(zipcodeObj);
 
-        // 🔥 Salva o usuário primeiro
         AppUser savedUser = userRepository.save(appuser);
 
-        // 🔥 Parseia a string abilities
         List<Integer> abilityIds = parseAbilities(abilities);
 
-        // 🔥 Para cada ID de habilidade -> cria UserAbility
         for (Integer abilityId : abilityIds) {
 
             Ability ability = abilityRepository.findById(abilityId)
@@ -132,22 +95,15 @@ public class UserService {
         AppUser user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        List<String> abilities = userAbilityRepository.findById(user.getId())
+        List<String> abilities = userAbilityRepository.findAllByUserId(user.getId())
                 .stream()
                 .map(ua -> ua.getAbility().getDescription())
                 .toList();
 
-        return new AppUserExtended(user, abilities);
+        return Optional.of(new AppUserExtended(user, abilities));
     }
 
 
-
-    /**
-     * Busca um usuário pelo username.
-     *
-     * @param username nome de usuário
-     * @return Optional contendo o usuário, se encontrado
-     */
     public Optional<AppUser> findByEmail(String email){
         return userRepository.findByEmail(email);
     }

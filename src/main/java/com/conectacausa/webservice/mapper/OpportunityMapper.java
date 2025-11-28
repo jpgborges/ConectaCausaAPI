@@ -4,14 +4,14 @@ import com.conectacausa.webservice.dto.CauseTypeDTO;
 import com.conectacausa.webservice.dto.OpportunityDTO;
 import com.conectacausa.webservice.dto.OrganizationDTO;
 import com.conectacausa.webservice.dto.ZipCodeDTO;
-import com.conectacausa.webservice.model.CauseType;
-import com.conectacausa.webservice.model.Opportunity;
-import com.conectacausa.webservice.model.Organization;
-import com.conectacausa.webservice.model.ZipCode;
+import com.conectacausa.webservice.model.*;
+import com.conectacausa.webservice.view.OpportunityExtended;
 
 public class OpportunityMapper {
 
-    public static OpportunityDTO toDTO(Opportunity opportunity) {
+    public static OpportunityDTO toDTO(OpportunityExtended ext) {
+
+        Opportunity opportunity = ext.getOpportunity();
 
         Organization org = opportunity.getOrganization();
 
@@ -48,7 +48,8 @@ public class OpportunityMapper {
                 opportunity.getHour(),
                 opportunity.getDuration(),
                 organizationDTO,
-                causeTypeDTO
+                causeTypeDTO,
+                ext.getAbilities()
         );
     }
 }

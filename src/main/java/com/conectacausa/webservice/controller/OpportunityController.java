@@ -5,6 +5,7 @@ import com.conectacausa.webservice.dto.OrganizationDTO;
 import com.conectacausa.webservice.mapper.OpportunityMapper;
 import com.conectacausa.webservice.model.Opportunity;
 import com.conectacausa.webservice.service.OpportunityService;
+import com.conectacausa.webservice.view.OpportunityExtended;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,15 +27,17 @@ public class OpportunityController {
             @RequestParam String hour,
             @RequestParam Integer duration,
             @RequestParam("organization_id") Integer organizationId,
-            @RequestParam("cause_type_id") Integer causeTypeId
+            @RequestParam("cause_type_id") Integer causeTypeId,
+            @RequestParam String abilities
     ) {
 
-        Opportunity opportunity = opportunityService.registerOpportunity(
+        OpportunityExtended opportunity = opportunityService.registerOpportunity(
                 description,
                 hour,
                 duration,
                 organizationId,
-                causeTypeId
+                causeTypeId,
+                abilities
         );
 
         return ResponseEntity.ok(OpportunityMapper.toDTO(opportunity));
@@ -43,7 +46,7 @@ public class OpportunityController {
     @GetMapping
     public ResponseEntity<?> getAllOpportunities() {
 
-        List<Opportunity> list = opportunityService.findAll();
+        List<OpportunityExtended> list = opportunityService.findAll();
 
         List<OpportunityDTO> dtoList = list.stream()
                 .map(OpportunityMapper::toDTO)
